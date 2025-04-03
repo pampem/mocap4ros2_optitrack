@@ -64,29 +64,29 @@ class OptitrackDriverNode : public mocap4r2_control::ControlledLifecycleNode
 {
 public:
   OptitrackDriverNode();
-  ~OptitrackDriverNode();
+  ~OptitrackDriverNode() override = default;
 
   using CallbackReturnT =
     rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
 
-  CallbackReturnT on_configure(const rclcpp_lifecycle::State & state);
-  CallbackReturnT on_activate(const rclcpp_lifecycle::State & state);
-  CallbackReturnT on_deactivate(const rclcpp_lifecycle::State & state);
-  CallbackReturnT on_cleanup(const rclcpp_lifecycle::State & state);
-  CallbackReturnT on_shutdown(const rclcpp_lifecycle::State & state);
-  CallbackReturnT on_error(const rclcpp_lifecycle::State & state);
+  CallbackReturnT on_configure(const rclcpp_lifecycle::State & state) override;
+  CallbackReturnT on_activate(const rclcpp_lifecycle::State & state) override;
+  CallbackReturnT on_deactivate(const rclcpp_lifecycle::State & state) override;
+  CallbackReturnT on_cleanup(const rclcpp_lifecycle::State & state) override;
+  CallbackReturnT on_shutdown(const rclcpp_lifecycle::State & state) override;
+  CallbackReturnT on_error(const rclcpp_lifecycle::State & state) override;
 
   bool connect_optitrack();
   bool disconnect_optitrack();
   void set_settings_optitrack();
   bool stop_optitrack();
-  void initParameters();
+  void init_parameters();
 
   void process_frame(sFrameOfMocapData * data);
 
 protected:
-  void control_start(const mocap4r2_control_msgs::msg::Control::SharedPtr msg) override;
-  void control_stop(const mocap4r2_control_msgs::msg::Control::SharedPtr msg) override;
+  void control_start(mocap4r2_control_msgs::msg::Control::SharedPtr msg) override;
+  void control_stop(mocap4r2_control_msgs::msg::Control::SharedPtr msg) override;
 
   NatNetClient * client;
 
@@ -109,11 +109,15 @@ protected:
   std::string multicast_address_;
   uint16_t server_command_port_;
   uint16_t server_data_port_;
+  int rigid_body_count_;
+  std::map<int, std::string> rigid_body_names_;
+  std::map<int, rclcpp_lifecycle::LifecyclePublisher<geometry_msgs::msg::PoseStamped>::SharedPtr>
+    pose_publishers_;
 
   uint32_t frame_number_{0};
 };
 
-void NATNET_CALLCONV process_frame_callback(sFrameOfMocapData * data, void * pUserData);
+void NATNET_CALLCONV process_frame_callback(sFrameOfMocapData * p_data, void * p_user_data);
 
 }  // namespace mocap4r2_optitrack_driver
 

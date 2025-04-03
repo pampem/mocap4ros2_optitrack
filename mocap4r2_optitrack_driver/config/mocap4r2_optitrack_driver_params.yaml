@@ -6,7 +6,11 @@ mocap4r2_optitrack_driver_node:
     multicast_address: "235.255.42.99"
     server_command_port: 1510
     server_data_port: 1512
-    rigid_body_name: "ground"
+    rigid_body_count: 4
+    rigid_body_name_id0: "ground"
+    rigid_body_name_id1: "drone1/mavros/vision_pose/pose"
+    rigid_body_name_id2: "drone2/mavros/vision_pose/pose"
+    rigid_body_name_id3: "drone3/mavros/vision_pose/pose"
     lastFrameNumber: 0
     frameCount: 0
     droppedFrameCount: 0
